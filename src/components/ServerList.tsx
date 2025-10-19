@@ -3,7 +3,6 @@ import { McpServer } from '@/types';
 import { ServerCard } from './ServerCard';
 import { Button } from './ui/button';
 import { ExternalLink, RefreshCw, LogOut, Loader2, MessageSquare } from 'lucide-react';
-import { BACKEND_URL } from '@/lib/utils';
 
 interface ServerListProps {
   servers: McpServer[];
@@ -70,7 +69,7 @@ export function ServerList({
   // };
 
   const openFullApp = () => {
-    chrome.tabs.create({ url: BACKEND_URL });
+    chrome.tabs.create({ url: 'https://mcpassistant.vercel.app' });
   };
 
   return (
@@ -108,26 +107,23 @@ export function ServerList({
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
             onClick={handleRefresh}
             disabled={refreshing}
           >
             {refreshing ? (
-              <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+              <Loader2 className="h-3 w-3 animate-spin" />
             ) : (
-              <RefreshCw className="h-3 w-3 mr-1" />
+              <RefreshCw className="h-3 w-3" />
             )}
-            Refresh
           </Button>
-          <Button variant="default" size="sm" onClick={onOpenChat}>
+          <Button variant="default" size="sm" className="flex-1" onClick={onOpenChat}>
             <MessageSquare className="h-3 w-3 mr-1" />
             Chat
           </Button>
+          <Button variant="outline" size="sm" onClick={openFullApp}>
+            <ExternalLink className="h-3 w-3" />
+          </Button>
         </div>
-        <Button variant="outline" size="sm" className="w-full mt-2" onClick={openFullApp}>
-          <ExternalLink className="h-3 w-3 mr-1" />
-          Open Full App
-        </Button>
       </div>
 
       {/* Server List */}
@@ -155,11 +151,11 @@ export function ServerList({
             </div>
             <h3 className="font-medium text-sm mb-1">No MCP Servers</h3>
             <p className="text-xs text-muted-foreground mb-4">
-              Open the full app to add and configure your MCP servers
+              Open the web app to add and configure your MCP servers
             </p>
             <Button size="sm" onClick={openFullApp}>
               <ExternalLink className="h-3 w-3 mr-1" />
-              Go to Full App
+              Web App
             </Button>
           </div>
         ) : (

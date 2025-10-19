@@ -25,7 +25,6 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
 
   const isConnected = server.connectionStatus === 'CONNECTED';
   const isFailed = server.connectionStatus === 'FAILED';
-  const isDisconnected = server.connectionStatus === 'DISCONNECTED';
 
   const getStatusBadge = () => {
     if (isConnected) return <Badge variant="success">Connected</Badge>;

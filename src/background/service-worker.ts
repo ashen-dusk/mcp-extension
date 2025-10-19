@@ -5,11 +5,14 @@ import { api } from '../lib/api';
 // Initialize extension
 chrome.runtime.onInstalled.addListener(() => {
   console.log('MCP Assistant Extension installed');
-  console.log('Chrome Extension Redirect URI:', chrome.identity.getRedirectURL());
+
+  // Configure side panel to open when action icon is clicked
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error('Failed to set panel behavior:', error));
 });
 
 // Handle messages from popup
-chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
   handleMessage(message)
     .then(sendResponse)
     .catch((error) => {

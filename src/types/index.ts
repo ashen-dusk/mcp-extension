@@ -32,6 +32,7 @@ export type AuthState = {
 };
 
 export type MessageType =
+  | 'OPEN_SIDE_PANEL'
   | 'AUTH_CHECK'
   | 'AUTH_LOGIN'
   | 'AUTH_LOGOUT'

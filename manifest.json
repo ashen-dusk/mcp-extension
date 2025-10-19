@@ -5,7 +5,8 @@
   "description": "Manage your MCP servers and interact with your AI assistant from anywhere",
   "permissions": [
     "storage",
-    "identity"
+    "identity",
+    "sidePanel"
   ],
   "host_permissions": [
     "https://mcpassistant.vercel.app/*",
@@ -18,13 +19,16 @@
     "http://localhost:8000/*"
   ],
   "action": {
-    "default_popup": "index.html",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",
       "48": "icons/icon-48.png",
       "128": "icons/icon-128.png"
-    }
+    },
+    "default_title": "MCP Assistant - Click to open"
+  },
+  "side_panel": {
+    "default_path": "index.html"
   },
   "background": {
     "service_worker": "src/background/service-worker.ts",

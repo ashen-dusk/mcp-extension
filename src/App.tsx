@@ -71,13 +71,13 @@ function App() {
   const { authState } = useAuth();
 
   // Prepare headers for CopilotKit with authentication
-  const copilotHeaders = useMemo(() => {
+  const copilotHeaders = useMemo((): Record<string, string> | undefined => {
     if (authState?.googleIdToken) {
       return {
         'Authorization': `Bearer ${authState.googleIdToken}`,
       };
     }
-    return {};
+    return undefined;
   }, [authState?.googleIdToken]);
 
   return (
