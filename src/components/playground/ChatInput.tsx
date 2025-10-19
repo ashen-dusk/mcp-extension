@@ -67,8 +67,8 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
   const selectedModelData = AVAILABLE_MODELS.find(m => m.id === state.model) || AVAILABLE_MODELS[0];
 
   return (
-    <div className="w-full px-4 py-3">
-      <div className="relative bg-zinc-800 rounded-2xl border border-zinc-800 shadow-xl">
+    <div className="w-full px-4 py-3 bg-background">
+      <div className="relative bg-muted rounded-2xl border border-border shadow-xl">
         <div className="flex items-end p-4">
           {/* Message Input Area */}
           <div className="flex-1 mr-3">
@@ -77,7 +77,7 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Type your prompt..."
-              className="w-full resize-none bg-transparent border-0 outline-none text-gray-100 placeholder-gray-500 text-[15px] leading-relaxed"
+              className="w-full resize-none bg-transparent border-0 outline-none text-foreground placeholder-muted-foreground text-[15px] leading-relaxed"
               rows={1}
               style={{
                 minHeight: '60px',
@@ -96,17 +96,17 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
           <div className="relative mr-2">
             <button
               onClick={() => setShowModelDropdown(!showModelDropdown)}
-              className="flex items-center space-x-1.5 px-3 py-1.5 hover:bg-zinc-700/50 rounded transition-all duration-200"
+              className="flex items-center space-x-1.5 px-3 py-1.5 hover:bg-accent rounded transition-all duration-200"
             >
-              <span className="text-xs font-medium text-gray-300">
+              <span className="text-xs font-medium text-foreground">
                 {selectedModelData?.name}
               </span>
-              <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${showModelDropdown ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform duration-200 ${showModelDropdown ? 'rotate-180' : ''}`} />
             </button>
 
             {showModelDropdown && (
               <>
-                <div className="absolute bottom-full mb-2 right-0 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 min-w-[280px] max-w-[320px] overflow-hidden">
+                <div className="absolute bottom-full mb-2 right-0 bg-popover border border-border rounded-xl shadow-2xl z-50 min-w-[280px] max-w-[320px] overflow-hidden">
                   <div className="py-1">
                     {AVAILABLE_MODELS.map((model) => (
                       <button
@@ -115,18 +115,18 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
                         className={`w-full flex flex-col px-4 py-3 text-left transition-all duration-150
                           ${state.model === model.id
                             ? 'bg-blue-600/20 border-l-2 border-blue-400'
-                            : 'text-gray-300 hover:bg-zinc-800 hover:text-white border-l-2 border-transparent'
+                            : 'text-muted-foreground hover:bg-accent hover:text-foreground border-l-2 border-transparent'
                           }`}
                       >
                         <div className="flex items-center justify-between w-full mb-1">
-                          <span className={`text-sm font-semibold ${state.model === model.id ? 'text-blue-400' : 'text-gray-100'}`}>
+                          <span className={`text-sm font-semibold ${state.model === model.id ? 'text-blue-400' : 'text-foreground'}`}>
                             {model.name}
                           </span>
                           {state.model === model.id && (
                             <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0" />
                           )}
                         </div>
-                        <span className="text-xs text-gray-400 leading-relaxed">
+                        <span className="text-xs text-muted-foreground leading-relaxed">
                           {model.description}
                         </span>
                       </button>

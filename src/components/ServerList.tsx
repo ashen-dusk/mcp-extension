@@ -73,12 +73,12 @@ export function ServerList({
   };
 
   return (
-    <div className="w-[400px] h-[600px] flex flex-col bg-background">
+    <div className="w-full h-screen flex flex-col bg-background">
       {/* Header */}
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
               <svg
                 className="w-5 h-5 text-primary-foreground"
                 fill="none"
@@ -187,7 +187,7 @@ export function ServerList({
       </div>
 
       {/* Footer */}
-      <div className="border-t px-4 py-2 bg-muted/30">
+      <div className="border-t px-4 py-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="font-medium">v1.0.0</span>

@@ -142,7 +142,7 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
         {/* Assistant Context Toggle */}
         <div className="flex items-center justify-between p-2 bg-muted/50 rounded-md">
           <div className="flex items-center gap-2">
-            <Brain className="h-3 w-3 text-blue-600" />
+            <Brain className="h-3 w-3 text-blue-400" />
             <span className="text-xs font-medium">Assistant Context</span>
           </div>
           <Switch

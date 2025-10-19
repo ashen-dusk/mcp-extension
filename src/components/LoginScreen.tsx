@@ -25,7 +25,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
   };
 
   return (
-    <div className="w-[400px] h-[500px] flex items-center justify-center p-4">
+    <div className="w-full h-screen flex items-center justify-center p-4">
       <Card className="w-full border-0">
         <CardHeader className="space-y-3 text-center">
           <div className="mx-auto w-12 h-12 bg-primary rounded-full flex items-center justify-center">

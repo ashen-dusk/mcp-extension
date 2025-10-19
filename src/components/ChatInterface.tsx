@@ -59,7 +59,7 @@ export function ChatInterface({ onBack, user }: ChatInterfaceProps) {
   }, [state]);
 
   return (
-    <div className="w-[400px] h-[600px] flex flex-col bg-background">
+    <div className="w-full h-screen flex flex-col bg-background">
       <ToolRenderer />
       {/* Header */}
       <div className="p-3 border-b flex items-center gap-2 bg-background">
@@ -88,7 +88,7 @@ export function ChatInterface({ onBack, user }: ChatInterfaceProps) {
       </div>
 
       {/* Footer */}
-      <div className="border-t px-4 py-2 bg-muted/30">
+      <div className="border-t px-4 py-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="font-medium">MCP Chat</span>
