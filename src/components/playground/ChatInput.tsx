@@ -16,10 +16,26 @@ interface CustomChatInputProps {
 }
 
 const AVAILABLE_MODELS = [
-  { id: "gpt-4o-mini", name: "GPT-4o Mini", icon: "🤖" },
-  { id: "gpt-4o", name: "GPT-4o", icon: "🧠" },
-  { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo", icon: "⚡" },
-  { id: "deepseek-chat", name: "DeepSeek-V3", icon: "🚀" },
+  {
+    id: "gpt-4o-mini",
+    name: "GPT-4o Mini",
+    description: "Fast and affordable for everyday tasks"
+  },
+  {
+    id: "gpt-4o",
+    name: "GPT-4o",
+    description: "Most capable, best for complex reasoning"
+  },
+  {
+    id: "gpt-3.5-turbo",
+    name: "GPT-3.5 Turbo",
+    description: "Quick responses, good for simple queries"
+  },
+  {
+    id: "deepseek-chat",
+    name: "DeepSeek-V3",
+    description: "Excellent at coding and technical tasks"
+  },
 ];
 
 export default function ChatInput({ onSendMessage, state, setState }: CustomChatInputProps) {
@@ -82,8 +98,7 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
               onClick={() => setShowModelDropdown(!showModelDropdown)}
               className="flex items-center space-x-1.5 px-3 py-1.5 hover:bg-zinc-700/50 rounded transition-all duration-200"
             >
-              <span className="text-base">{selectedModelData?.icon}</span>
-              <span className="text-xs font-medium text-gray-300 hidden sm:inline">
+              <span className="text-xs font-medium text-gray-300">
                 {selectedModelData?.name}
               </span>
               <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${showModelDropdown ? 'rotate-180' : ''}`} />
@@ -91,23 +106,29 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
 
             {showModelDropdown && (
               <>
-                <div className="absolute bottom-full mb-2 right-0 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 min-w-[180px] overflow-hidden">
+                <div className="absolute bottom-full mb-2 right-0 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl z-50 min-w-[280px] max-w-[320px] overflow-hidden">
                   <div className="py-1">
                     {AVAILABLE_MODELS.map((model) => (
                       <button
                         key={model.id}
                         onClick={() => handleModelChange(model.id)}
-                        className={`w-full flex items-center space-x-2.5 px-4 py-2.5 text-left transition-all duration-150
+                        className={`w-full flex flex-col px-4 py-3 text-left transition-all duration-150
                           ${state.model === model.id
-                            ? 'bg-blue-600/20 text-blue-400'
-                            : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
+                            ? 'bg-blue-600/20 border-l-2 border-blue-400'
+                            : 'text-gray-300 hover:bg-zinc-800 hover:text-white border-l-2 border-transparent'
                           }`}
                       >
-                        <span className="text-base">{model.icon}</span>
-                        <span className="text-sm font-medium flex-1">{model.name}</span>
-                        {state.model === model.id && (
-                          <CheckCircle className="w-3.5 h-3.5 text-blue-400" />
-                        )}
+                        <div className="flex items-center justify-between w-full mb-1">
+                          <span className={`text-sm font-semibold ${state.model === model.id ? 'text-blue-400' : 'text-gray-100'}`}>
+                            {model.name}
+                          </span>
+                          {state.model === model.id && (
+                            <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-400 leading-relaxed">
+                          {model.description}
+                        </span>
                       </button>
                     ))}
                   </div>
