@@ -69,7 +69,7 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="border-2 hover:border-primary/50 transition-colors">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2 flex-1">

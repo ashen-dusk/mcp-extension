@@ -86,6 +86,25 @@ export function ChatInterface({ onBack, user }: ChatInterfaceProps) {
           Input={ChatInputWrapper}
         />
       </div>
+
+      {/* Footer */}
+      <div className="border-t px-4 py-2 bg-muted/30">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span className="font-medium">MCP Chat</span>
+            <span className="text-muted-foreground/60">•</span>
+            <span className="truncate">{state.model}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/docs' })}
+              className="hover:text-foreground transition-colors"
+            >
+              Help
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

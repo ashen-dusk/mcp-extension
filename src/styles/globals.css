@@ -76,3 +76,21 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+
+/* Dark chat interface background */
+.copilotKitMessages {
+  background-color: hsl(222.2 84% 4.9%) !important;
+}
+
+.copilotKitMessage {
+  background-color: transparent !important;
+}
+
+.copilotKitUserMessage {
+  background-color: hsl(217.2 32.6% 17.5%) !important;
+}
+
+.copilotKitAssistantMessage {
+  background-color: transparent !important;
+  color: hsl(210 40% 98%) !important;
+}

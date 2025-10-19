@@ -78,7 +78,7 @@ export function ServerList({
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center">
               <svg
                 className="w-5 h-5 text-primary-foreground"
                 fill="none"
@@ -103,25 +103,39 @@ export function ServerList({
           </Button>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1 bg-muted/50 p-1 rounded-lg">
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
+            className="flex-1 h-8"
             onClick={handleRefresh}
             disabled={refreshing}
           >
             {refreshing ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
+              <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
             ) : (
-              <RefreshCw className="h-3 w-3" />
+              <RefreshCw className="h-4 w-4 mr-1.5" />
             )}
+            <span className="text-xs">Refresh</span>
           </Button>
-          <Button variant="default" size="sm" className="flex-1" onClick={onOpenChat}>
-            <MessageSquare className="h-3 w-3 mr-1" />
-            Chat
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex-1 h-8 data-[active=true]:bg-background data-[active=true]:shadow-sm"
+            onClick={onOpenChat}
+            data-active="false"
+          >
+            <MessageSquare className="h-4 w-4 mr-1.5" />
+            <span className="text-xs">Chat</span>
           </Button>
-          <Button variant="outline" size="sm" onClick={openFullApp}>
-            <ExternalLink className="h-3 w-3" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex-1 h-8"
+            onClick={openFullApp}
+          >
+            <ExternalLink className="h-4 w-4 mr-1.5" />
+            <span className="text-xs">Web App</span>
           </Button>
         </div>
       </div>
@@ -170,6 +184,31 @@ export function ServerList({
             />
           ))
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="border-t px-4 py-2 bg-muted/30">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <span className="font-medium">v1.0.0</span>
+            <span className="text-muted-foreground/60">•</span>
+            <span>{servers.filter(s => s.connectionStatus === 'CONNECTED').length} connected</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://github.com/modelcontextprotocol' })}
+              className="hover:text-foreground transition-colors"
+            >
+              Help
+            </button>
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/docs' })}
+              className="hover:text-foreground transition-colors"
+            >
+              Docs
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
