@@ -5,6 +5,7 @@ import { api } from '../lib/api';
 // Initialize extension
 chrome.runtime.onInstalled.addListener(() => {
   console.log('MCP Assistant Extension installed');
+  console.log('Chrome Extension Redirect URI:', chrome.identity.getRedirectURL());
 });
 
 // Handle messages from popup
@@ -68,34 +69,62 @@ async function handleAuthCheck(): Promise<{ success: boolean; authState: AuthSta
 
 async function handleAuthLogin(): Promise<{ success: boolean; authState?: AuthState; error?: string }> {
   try {
-    // Use Chrome Identity API to authenticate with Google
-    const token = await new Promise<string>((resolve, reject) => {
-      chrome.identity.getAuthToken({ interactive: true }, (token) => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else if (token) {
-          resolve(token);
-        } else {
-          reject(new Error('Failed to get auth token'));
+    // Get the client ID from manifest
+    const manifest = chrome.runtime.getManifest();
+    const clientId = manifest.oauth2?.client_id;
+
+    if (!clientId) {
+      throw new Error('OAuth2 client ID not configured in manifest');
+    }
+
+    // Create OAuth2 authorization URL to get ID token
+    const redirectUrl = chrome.identity.getRedirectURL();
+    const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    authUrl.searchParams.set('client_id', clientId);
+    authUrl.searchParams.set('response_type', 'id_token');
+    authUrl.searchParams.set('redirect_uri', redirectUrl);
+    authUrl.searchParams.set('scope', 'openid email profile');
+    authUrl.searchParams.set('nonce', crypto.randomUUID());
+
+    // Launch OAuth2 flow to get ID token
+    const responseUrl = await new Promise<string>((resolve, reject) => {
+      chrome.identity.launchWebAuthFlow(
+        {
+          url: authUrl.toString(),
+          interactive: true,
+        },
+        (callbackUrl) => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else if (callbackUrl) {
+            resolve(callbackUrl);
+          } else {
+            reject(new Error('Failed to get callback URL'));
+          }
         }
-      });
+      );
     });
 
-    // Fetch user info from Google
-    const userInfoResponse = await fetch(
-      `https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`
-    );
-    const userInfo = await userInfoResponse.json();
+    // Parse ID token from the callback URL fragment
+    const urlParams = new URL(responseUrl);
+    const fragment = urlParams.hash.substring(1); // Remove the #
+    const params = new URLSearchParams(fragment);
+    const idToken = params.get('id_token');
 
-    // Exchange the access token for an ID token
-    // In production, you'd call your backend to validate and exchange tokens
+    if (!idToken) {
+      throw new Error('No ID token received from Google');
+    }
+
+    // Decode the ID token to get user info (without verification - backend will verify)
+    const payload = JSON.parse(atob(idToken.split('.')[1]));
+
     const authState: AuthState = {
       isAuthenticated: true,
-      googleIdToken: token, // In production, this should be the ID token from your backend
+      googleIdToken: idToken,
       user: {
-        name: userInfo.name,
-        email: userInfo.email,
-        image: userInfo.picture,
+        name: payload.name,
+        email: payload.email,
+        image: payload.picture,
       },
     };
 
@@ -113,21 +142,7 @@ async function handleAuthLogin(): Promise<{ success: boolean; authState?: AuthSt
 
 async function handleAuthLogout(): Promise<{ success: boolean }> {
   try {
-    const token = await storage.getGoogleIdToken();
-
-    if (token) {
-      // Remove cached auth token
-      await new Promise<void>((resolve, reject) => {
-        chrome.identity.removeCachedAuthToken({ token }, () => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve();
-          }
-        });
-      });
-    }
-
+    // Clear stored auth state
     await storage.clearAuthState();
     return { success: true };
   } catch (error) {
