@@ -95,3 +95,34 @@
 .copilotKitInput input::placeholder {
   color: hsl(240 5% 64.9%) !important;
 }
+
+/* Loading spinner - white color */
+.copilotKitSpinner {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  border-top-color: white !important;
+}
+
+/* Activity dots - white color */
+.copilotKitActivityDot {
+  background-color: white !important;
+}
+
+/* Message control buttons (copy, thumbs up/down, regenerate) - white color */
+.copilotKitMessageControlButton {
+  color: white !important;
+  border-color: white !important;
+}
+
+.copilotKitMessageControlButton:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Message controls container */
+.copilotKitMessageControls {
+  color: white !important;
+}
+
+.copilotKitMessageControls button {
+  border-color: white !important;
+}
