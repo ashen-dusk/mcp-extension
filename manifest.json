@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "MCP Assistant",
+  "version": "1.0.0",
+  "description": "Manage your MCP servers and interact with your AI assistant from anywhere",
+  "permissions": [
+    "storage",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://mcpassistant.vercel.app/*",
+    "https://api.quicklit.in/*",
+    "https://express-copilotkit-runtime.vercel.app/*",
+    "https://*.googleapis.com/*",
+    "http://localhost:5173/*",
+    "http://localhost:3000/*",
+    "http://localhost:4000/*"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.ts",
+    "type": "module"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "oauth2": {
+    "client_id": "4924083673-keao38oe65lth768v8r0d2lb76s06cuc.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
