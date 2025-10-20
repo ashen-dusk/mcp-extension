@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - MCP Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #1e40af;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: #374151;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+
+        ul {
+            margin-bottom: 15px;
+            margin-left: 20px;
+            color: #4b5563;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: #1f2937;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .last-updated {
+            color: #6b7280;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 15px;
+            border-left: 4px solid #f59e0b;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Privacy Policy for MCP Assistant</h1>
+        <p class="last-updated"><strong>Last Updated:</strong> October 20, 2024</p>
+
+        <h2>Introduction</h2>
+        <p>MCP Assistant ("we", "our", or "the extension") is a Chrome extension that helps users manage MCP (Model Context Protocol) servers and interact with AI assistants. This privacy policy explains how we collect, use, and protect your information.</p>
+
+        <h2>Information We Collect</h2>
+
+        <h3>1. Authentication Information</h3>
+        <ul>
+            <li><strong>Google Account Information:</strong> When you sign in using Google OAuth, we collect:
+                <ul>
+                    <li>Your email address</li>
+                    <li>Your profile information (name, profile picture)</li>
+                    <li>Google user ID</li>
+                </ul>
+            </li>
+        </ul>
+        <p>This information is used solely for authentication purposes and to provide you with a personalized experience.</p>
+
+        <h3>2. MCP Server Configuration</h3>
+        <ul>
+            <li>Server names, URLs, and connection settings you configure</li>
+            <li>This data is stored locally in your browser using Chrome's storage API</li>
+            <li>No server configuration data is transmitted to us or any third parties</li>
+        </ul>
+
+        <h3>3. Usage Data</h3>
+        <ul>
+            <li>The extension may store usage preferences locally in your browser</li>
+            <li>No analytics or tracking data is collected or transmitted</li>
+        </ul>
+
+        <h2>How We Use Your Information</h2>
+        <p>We use the collected information to:</p>
+        <ul>
+            <li>Authenticate you with your Google account</li>
+            <li>Maintain your session across browser restarts</li>
+            <li>Store your MCP server configurations locally</li>
+            <li>Provide access to connected MCP servers and AI assistant features</li>
+        </ul>
+
+        <h2>Data Storage</h2>
+        <ul>
+            <li><strong>Local Storage:</strong> All MCP server configurations and preferences are stored locally in your browser using Chrome's storage API</li>
+            <li><strong>Backend Services:</strong> Authentication tokens are securely transmitted to our backend services to validate your identity</li>
+            <li><strong>No Third-Party Storage:</strong> We do not store your personal information or configurations on third-party servers</li>
+        </ul>
+
+        <h2>Data Sharing</h2>
+        <p>We do <strong>NOT</strong>:</p>
+        <ul>
+            <li>Sell your personal information to third parties</li>
+            <li>Share your data with advertisers</li>
+            <li>Use your data for marketing purposes</li>
+            <li>Track your browsing activity outside the extension</li>
+        </ul>
+
+        <p>We <strong>MAY</strong> share data only in these circumstances:</p>
+        <ul>
+            <li>When required by law or legal process</li>
+            <li>To protect the rights, property, or safety of users or others</li>
+            <li>With your explicit consent</li>
+        </ul>
+
+        <h2>Third-Party Services</h2>
+
+        <h3>Google OAuth</h3>
+        <p>We use Google OAuth for authentication. When you sign in:</p>
+        <ul>
+            <li>Google's Privacy Policy applies: <a href="https://policies.google.com/privacy" target="_blank">https://policies.google.com/privacy</a></li>
+            <li>We receive only the minimum information necessary for authentication</li>
+        </ul>
+
+        <h3>MCP Servers</h3>
+        <p>When you connect to MCP servers:</p>
+        <ul>
+            <li>You are responsible for the privacy policies of those servers</li>
+            <li>We do not control or monitor the data exchanged with third-party MCP servers</li>
+        </ul>
+
+        <h3>Backend API</h3>
+        <p>Our extension communicates with:</p>
+        <ul>
+            <li><code>https://mcpassistant.vercel.app/*</code> - Main application backend</li>
+            <li><code>https://api.quicklit.in/*</code> - API services</li>
+            <li><code>https://express-copilotkit-runtime.vercel.app/*</code> - AI assistant runtime</li>
+        </ul>
+        <p>These services process authentication tokens and facilitate MCP server connections.</p>
+
+        <h2>Permissions Explained</h2>
+        <p>MCP Assistant requests the following Chrome permissions:</p>
+        <ul>
+            <li><strong>storage:</strong> Store your MCP server configurations and preferences locally</li>
+            <li><strong>identity:</strong> Enable Google OAuth authentication</li>
+            <li><strong>sidePanel:</strong> Display the assistant interface in Chrome's side panel</li>
+            <li><strong>host_permissions:</strong> Communicate with our backend services and configured MCP servers</li>
+        </ul>
+
+        <h2>Data Security</h2>
+        <p>We implement security measures including:</p>
+        <ul>
+            <li>HTTPS encryption for all network communications</li>
+            <li>Secure token handling for authentication</li>
+            <li>No plaintext storage of sensitive credentials</li>
+            <li>OAuth 2.0 industry-standard authentication</li>
+        </ul>
+
+        <h2>Your Rights</h2>
+        <p>You have the right to:</p>
+        <ul>
+            <li><strong>Access:</strong> Review your stored data in Chrome's extension storage</li>
+            <li><strong>Delete:</strong> Uninstall the extension to remove all locally stored data</li>
+            <li><strong>Revoke Access:</strong> Disconnect your Google account at any time</li>
+            <li><strong>Export:</strong> Your data is stored locally and accessible through Chrome DevTools</li>
+        </ul>
+
+        <h2>Children's Privacy</h2>
+        <p>MCP Assistant is not intended for children under 13. We do not knowingly collect information from children under 13.</p>
+
+        <h2>Changes to This Policy</h2>
+        <p>We may update this privacy policy from time to time. When we do:</p>
+        <ul>
+            <li>The "Last Updated" date will be revised</li>
+            <li>Material changes will be communicated through the extension or our website</li>
+            <li>Continued use of the extension constitutes acceptance of changes</li>
+        </ul>
+
+        <h2>Data Retention</h2>
+        <ul>
+            <li><strong>Local Data:</strong> Stored until you uninstall the extension or clear Chrome's storage</li>
+            <li><strong>Authentication Tokens:</strong> Expire according to Google's OAuth token lifetime</li>
+            <li><strong>No Server-Side Retention:</strong> We do not retain your personal data on our servers</li>
+        </ul>
+
+        <h2>Contact Us</h2>
+        <p>If you have questions about this privacy policy or your data:</p>
+        <ul>
+            <li><strong>GitHub Issues:</strong> <a href="https://github.com/ashen-dusk/chrome-extension/issues" target="_blank">https://github.com/ashen-dusk/chrome-extension/issues</a></li>
+            <li><strong>Repository:</strong> <a href="https://github.com/ashen-dusk/chrome-extension" target="_blank">https://github.com/ashen-dusk/chrome-extension</a></li>
+        </ul>
+
+        <h2>Open Source</h2>
+        <p>MCP Assistant is open source. You can review our code at:<br>
+        <a href="https://github.com/ashen-dusk/chrome-extension" target="_blank">https://github.com/ashen-dusk/chrome-extension</a></p>
+
+        <h2>Compliance</h2>
+        <p>This extension complies with:</p>
+        <ul>
+            <li>Chrome Web Store Developer Program Policies</li>
+            <li>Google API Services User Data Policy</li>
+            <li>General Data Protection Regulation (GDPR) principles</li>
+        </ul>
+
+        <div class="highlight">
+            <p><strong>Your Privacy Matters:</strong> We are committed to protecting your privacy and being transparent about our data practices. This extension is designed to keep your data local and secure.</p>
+        </div>
+
+        <div class="footer">
+            <p>MCP Assistant &copy; 2024 | <a href="https://github.com/ashen-dusk/chrome-extension">GitHub Repository</a></p>
+        </div>
+    </div>
+</body>
+</html>
