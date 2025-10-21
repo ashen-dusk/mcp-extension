@@ -104,13 +104,13 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
           </p>
         </div>
 
-        {/* Connection Buttons */}
-        <div className="flex gap-2">
+        {/* Connection, Restart Buttons, and Context Toggle */}
+        <div className="flex gap-2 items-center">
           {isConnected || isFailed ? (
             <Button
               size="sm"
-              variant="destructive"
-              className="flex-1"
+              variant="ghost"
+              className="flex-1 border-0"
               onClick={handleDisconnect}
               disabled={isDisconnecting}
             >
@@ -124,8 +124,8 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
           ) : (
             <Button
               size="sm"
-              variant="default"
-              className="flex-1"
+              variant="ghost"
+              className="flex-1 border-0"
               onClick={handleConnect}
               disabled={isConnecting}
             >
@@ -137,26 +137,10 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
               Connect
             </Button>
           )}
-        </div>
-
-        {/* Assistant Context Toggle */}
-        <div className="flex items-center justify-between p-2 bg-muted/50 rounded-md">
-          <div className="flex items-center gap-2">
-            <Brain className="h-3 w-3 text-blue-400" />
-            <span className="text-xs font-medium">Assistant Context</span>
-          </div>
-          <Switch
-            checked={server.enabled}
-            onCheckedChange={handleContextToggle}
-            disabled={!isConnected || isTogglingContext}
-          />
-        </div>
-
-        <div className="flex gap-2 pt-2">
           <Button
             size="sm"
-            variant="outline"
-            className="flex-1"
+            variant="ghost"
+            className="flex-1 border-0"
             onClick={handleRestart}
             disabled={!isConnected || isRestarting}
           >
@@ -167,14 +151,14 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
             )}
             Restart
           </Button>
-          {/* COMMENTED OUT: Delete button */}
-          {/* <Button
-            size="sm"
-            variant="destructive"
-            onClick={() => onDelete(server.name)}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button> */}
+          <div className="flex-1 flex items-center justify-center gap-1.5 px-2" title="Assistant Context">
+            <Brain className="h-3.5 w-3.5 text-blue-400" />
+            <Switch
+              checked={server.enabled}
+              onCheckedChange={handleContextToggle}
+              disabled={!isConnected || isTogglingContext}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
