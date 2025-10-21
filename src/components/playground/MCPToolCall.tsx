@@ -1,13 +1,15 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, ChevronDown, Copy, Wrench } from "lucide-react";
 import * as React from "react";
+
+type ToolCallData = Record<string, unknown> | string | null | undefined;
 
 interface ToolCallProps {
   status: "complete" | "inProgress" | "executing";
   name?: string;
-  args?: any;
-  result?: any;
+  args?: ToolCallData;
+  result?: ToolCallData;
 }
 
 export default function MCPToolCall({
@@ -19,7 +21,7 @@ export default function MCPToolCall({
   const [isOpen, setIsOpen] = React.useState(false);
 
   // Format content for display
-  const format = (content: any): string => {
+  const format = (content: ToolCallData): string => {
     if (!content) return "";
     const text =
       typeof content === "object"
@@ -32,75 +34,97 @@ export default function MCPToolCall({
       .replace(/\\\\/g, "\\");
   };
 
-  const getStatusIcon = () => {
+  const getStatusConfig = () => {
     if (status === "complete") {
       console.log(result, "MCPToolCall Result");
-      if (result && result.error) {
+      if (result && typeof result === "object" && "error" in result) {
         const errorMessage = JSON.stringify(result.error);
         console.log(errorMessage, "MCPToolCall Error");
-        return (
-          <svg className="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        );
+        return {
+          icon: <XCircle className="w-5 h-5 text-destructive" />,
+          bgColor: "bg-destructive/10",
+          borderColor: "border-destructive/50",
+          textColor: "text-destructive",
+        };
       } else {
-        return (
-          (result === "" ? false : JSON.parse(result?.content?.[0]?.text || "{}")?.error) ? (
-            <svg className="w-3 h-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-3 h-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          )
-        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const hasError = result === "" ? false : (typeof result === "object" && result !== null && "content" in result ? JSON.parse((result as any).content?.[0]?.text || "{}")?.error : false);
+        if (hasError) {
+          return {
+            icon: <XCircle className="w-5 h-5 text-destructive" />,
+            bgColor: "bg-destructive/10",
+            borderColor: "border-destructive/50",
+            textColor: "text-destructive",
+          };
+        }
+        return {
+          icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
+          bgColor: "bg-green-500/10",
+          borderColor: "border-green-500/50",
+          textColor: "text-green-600 dark:text-green-400",
+        };
       }
     }
-    return <Loader2 className="w-3 h-3 animate-spin text-blue-500" />;
+    return {
+      icon: <Loader2 className="w-5 h-5 animate-spin text-blue-500" />,
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/50",
+      textColor: "text-blue-600 dark:text-blue-400",
+    };
   };
 
-  const getStatusBadge = () => {
-    if (status === "complete") {
-      if (result && result.error) {
-        return <span className="px-1.5 py-0.5 text-[10px] font-medium bg-red-100 text-red-700 rounded">Error</span>;
-      }
-      const hasError = result === "" ? false : JSON.parse(result?.content?.[0]?.text || "{}")?.error;
-      if (hasError) {
-        return <span className="px-1.5 py-0.5 text-[10px] font-medium bg-red-100 text-red-700 rounded">Error</span>;
-      }
-      return <span className="px-1.5 py-0.5 text-[10px] font-medium bg-green-100 text-green-700 rounded">Done</span>;
-    }
-    return <span className="px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 text-blue-700 rounded animate-pulse">Running</span>;
+  const config = getStatusConfig();
+
+  const handleCopy = (content: string) => {
+    navigator.clipboard?.writeText(content);
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden w-full transition-all duration-200 hover:shadow-md">
+    <div
+      className={`${config.bgColor} ${config.borderColor} border-l-4 rounded overflow-hidden transition-all duration-200`}
+    >
       <div
-        className="px-3 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-50"
+        className="p-3 flex items-center justify-between cursor-pointer hover:bg-opacity-80"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <div className="flex-shrink-0">
-            {getStatusIcon()}
+        <div className="flex items-center gap-3 flex-1">
+          <div className="flex items-center justify-center">
+            {config.icon}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-gray-900 truncate">
-              {name || "MCP Tool Call"}
-            </p>
+            <div className="flex items-center gap-2">
+              <Wrench className="w-4 h-4 text-muted-foreground" />
+              <span className={`${config.textColor} font-medium text-sm truncate`}>
+                {name || "MCP Tool Call"}
+              </span>
+            </div>
           </div>
-          {getStatusBadge()}
         </div>
+        <ChevronDown
+          className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
       </div>
 
       {isOpen && (
-        <div className="px-3 pb-3 pt-2 bg-gray-50 border-t border-gray-200">
+        <div className="px-3 pb-3 space-y-2 border-t border-border pt-2">
           {args && (
-            <div className="mb-2">
-              <div className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide mb-1">
-                Parameters
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Parameters
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopy(format(args));
+                  }}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy
+                </button>
               </div>
-              <pre className="text-[10px] bg-white p-2 rounded border border-gray-200 overflow-auto max-h-[120px] font-mono text-gray-700">
+              <pre className="text-xs bg-muted p-2.5 rounded overflow-auto max-h-[180px] font-mono border border-border">
                 {format(args)}
               </pre>
             </div>
@@ -108,10 +132,22 @@ export default function MCPToolCall({
 
           {status === "complete" && result && (
             <div>
-              <div className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide mb-1">
-                Result
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Result
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopy(format(result));
+                  }}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Copy className="w-3 h-3" />
+                  Copy
+                </button>
               </div>
-              <pre className="text-[10px] bg-white p-2 rounded border border-gray-200 overflow-auto max-h-[120px] font-mono text-gray-700">
+              <pre className="text-xs bg-muted p-2.5 rounded overflow-auto max-h-[180px] font-mono border border-border">
                 {format(result)}
               </pre>
             </div>
