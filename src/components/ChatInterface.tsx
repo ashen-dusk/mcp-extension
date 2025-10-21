@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { CopilotChat } from '@copilotkit/react-ui';
 import { useCoAgent } from '@copilotkit/react-core';
 import { Button } from './ui/button';
@@ -18,34 +18,43 @@ interface ChatInterfaceProps {
 
 interface AgentState {
   model: string;
-  status: string | null;
+  status: string | null | undefined;
   sessionId: string;
 }
 
 export function ChatInterface({ onBack, user }: ChatInterfaceProps) {
+  const [sessionId, setSessionId] = useState<string>('');
+
   // Initialize agent state with session ID
   const { state, setState } = useCoAgent<AgentState>({
     name: "mcpAssistant",
     initialState: {
       model: "gpt-4o-mini",
-      status: null,
-      sessionId: user?.email?.replace(/@gmail\.com$/, '') || user?.email || '',
+      status: undefined,
+      sessionId: sessionId,
     },
   });
 
   // Update session ID when user changes
   useEffect(() => {
-    const sessionId = user?.email?.replace(/@gmail\.com$/, '') || user?.email || '';
+    const email = user?.email;
+    let id = '';
+    if (email && email.endsWith("@gmail.com")) {
+      id = email.replace(/@gmail\.com$/, "");
+    } else {
+      id = email || '';
+    }
+    setSessionId(id);
+
     setState((prevState: AgentState | undefined) => ({
       model: prevState?.model ?? "gpt-4o-mini",
-      status: prevState?.status ?? null,
-      sessionId,
+      status: prevState?.status,
+      sessionId: id,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.email]);
 
   // Wrapper component that integrates with CopilotKit's input system
-  // setState is stable from useCoAgent, so we only need state in deps
   const ChatInputWrapper = useCallback((props: any) => {
     return (
       <div className="w-full">
@@ -56,7 +65,7 @@ export function ChatInterface({ onBack, user }: ChatInterfaceProps) {
         />
       </div>
     );
-  }, [state]);
+  }, [state, setState]);
 
   return (
     <div className="w-full h-screen flex flex-col bg-background">

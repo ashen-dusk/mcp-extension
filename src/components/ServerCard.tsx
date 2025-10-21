@@ -116,7 +116,7 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
 
         {/* Connection, Restart Buttons, and Context Toggle */}
         <div className="flex gap-2 items-center">
-          {isConnected || isFailed ? (
+          {isConnected ? (
             <Button
               size="sm"
               variant="ghost"
@@ -142,9 +142,9 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
               {isConnecting ? (
                 <Loader2 className="h-3 w-3 mr-1 animate-spin" />
               ) : (
-                <Wifi className="h-3 w-3 mr-1" />
+                <RefreshCw className="h-3 w-3 mr-1" />
               )}
-              Connect
+              {isFailed ? 'Retry' : 'Connect'}
             </Button>
           )}
           <Button
