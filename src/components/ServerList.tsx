@@ -103,7 +103,7 @@ export function ServerList({
           </Button>
         </div>
 
-        <div className="flex gap-1 bg-muted/50 p-1 rounded-lg">
+        <div className="flex gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -121,9 +121,8 @@ export function ServerList({
           <Button
             variant="ghost"
             size="sm"
-            className="flex-1 h-8 data-[active=true]:bg-background data-[active=true]:shadow-sm"
+            className="flex-1 h-8"
             onClick={onOpenChat}
-            data-active="false"
           >
             <MessageSquare className="h-4 w-4 mr-1.5" />
             <span className="text-xs">Chat</span>

@@ -27,7 +27,7 @@ function AppContent() {
   // Show loading screen while checking authentication
   if (authLoading) {
     return (
-      <div className="w-[400px] h-[500px] flex items-center justify-center bg-background">
+      <div className="w-full h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
