@@ -5,9 +5,10 @@ import { useMcpServers } from './hooks/useMcpServers';
 import { LoginScreen } from './components/LoginScreen';
 import { ServerList } from './components/ServerList';
 import { ChatInterface } from './components/ChatInterface';
+import { WhatsNext } from './components/WhatsNext';
 import { Loader2 } from 'lucide-react';
 
-type View = 'servers' | 'chat';
+type View = 'servers' | 'chat' | 'whatsnext';
 
 function AppContent() {
   const [currentView, setCurrentView] = useState<View>('servers');
@@ -43,6 +44,16 @@ function AppContent() {
     return <LoginScreen onLogin={login} />;
   }
 
+  // Show what's next page
+  if (currentView === 'whatsnext') {
+    return (
+      <WhatsNext
+        onBack={() => setCurrentView('servers')}
+        user={authState?.user}
+      />
+    );
+  }
+
   // Show chat interface
   if (currentView === 'chat') {
     return (
@@ -67,6 +78,7 @@ function AppContent() {
       onToggleContext={toggleContext}
       onLogout={logout}
       onOpenChat={() => setCurrentView('chat')}
+      onWhatsNext={() => setCurrentView('whatsnext')}
       user={authState?.user}
     />
   );

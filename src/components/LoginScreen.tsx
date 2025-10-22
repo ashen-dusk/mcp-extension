@@ -123,9 +123,15 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             </div>
           </div>
 
-          <div className="text-xs text-muted-foreground text-center pt-6">
+          <div className="text-xs text-muted-foreground text-center pt-6 space-y-2">
             <p>By signing in, you agree to use your existing</p>
             <p>MCP Assistant account credentials</p>
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://ashen-dusk.github.io/mcp-extension/privacy.html' })}
+              className="text-primary hover:underline"
+            >
+              Privacy Policy
+            </button>
           </div>
         </CardContent>
       </Card>

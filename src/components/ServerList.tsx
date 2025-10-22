@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { McpServer } from '@/types';
 import { ServerCard } from './ServerCard';
 import { Button } from './ui/button';
-import { ExternalLink, RefreshCw, LogOut, Loader2, MessageSquare } from 'lucide-react';
+import { ExternalLink, RefreshCw, LogOut, Loader2, MessageSquare, Sparkles } from 'lucide-react';
 
 interface ServerListProps {
   servers: McpServer[];
@@ -16,6 +16,7 @@ interface ServerListProps {
   onToggleContext: (serverName: string, enabled: boolean) => Promise<any>;
   onLogout: () => Promise<void>;
   onOpenChat: () => void;
+  onWhatsNext: () => void;
   user?: {
     name: string;
     email: string;
@@ -35,6 +36,7 @@ export function ServerList({
   onToggleContext,
   onLogout,
   onOpenChat,
+  onWhatsNext,
   user,
 }: ServerListProps) {
   const [refreshing, setRefreshing] = useState(false);
@@ -103,38 +105,49 @@ export function ServerList({
           </Button>
         </div>
 
-        <div className="flex gap-2">
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-1 h-8"
+              onClick={handleRefresh}
+              disabled={refreshing}
+            >
+              {refreshing ? (
+                <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-1.5" />
+              )}
+              <span className="text-xs">Refresh</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-1 h-8"
+              onClick={onOpenChat}
+            >
+              <MessageSquare className="h-4 w-4 mr-1.5" />
+              <span className="text-xs">Chat</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-1 h-8"
+              onClick={openFullApp}
+            >
+              <ExternalLink className="h-4 w-4 mr-1.5" />
+              <span className="text-xs">Web</span>
+            </Button>
+          </div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            className="flex-1 h-8"
-            onClick={handleRefresh}
-            disabled={refreshing}
+            className="w-full h-8 bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border-purple-500/20"
+            onClick={onWhatsNext}
           >
-            {refreshing ? (
-              <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
-            ) : (
-              <RefreshCw className="h-4 w-4 mr-1.5" />
-            )}
-            <span className="text-xs">Refresh</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex-1 h-8"
-            onClick={onOpenChat}
-          >
-            <MessageSquare className="h-4 w-4 mr-1.5" />
-            <span className="text-xs">Chat</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex-1 h-8"
-            onClick={openFullApp}
-          >
-            <ExternalLink className="h-4 w-4 mr-1.5" />
-            <span className="text-xs">Web App</span>
+            <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
+            <span className="text-xs font-medium">What's Next</span>
           </Button>
         </div>
       </div>
@@ -194,6 +207,12 @@ export function ServerList({
             <span>{servers.filter(s => s.connectionStatus === 'CONNECTED').length} connected</span>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => chrome.tabs.create({ url: 'https://ashen-dusk.github.io/mcp-extension/privacy.html' })}
+              className="hover:text-foreground transition-colors"
+            >
+              Privacy
+            </button>
             <button
               onClick={() => chrome.tabs.create({ url: 'https://github.com/modelcontextprotocol' })}
               className="hover:text-foreground transition-colors"
