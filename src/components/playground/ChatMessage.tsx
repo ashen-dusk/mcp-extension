@@ -66,17 +66,23 @@ export function AssistantMessage({ message, isLoading }: AssistantMessageProps) 
     return null;
   }
 
+  // Only show avatar when there's message content (not just tool calls)
+  // Don't show avatar during tool-only execution (even when loading)
+  const showAvatar = messageContent || (isLoading && !subComponent);
+
   return (
     <div className="flex items-start gap-3 px-4 py-3">
-      {/* Avatar */}
-      <div className="shrink-0 w-8 h-8">
-        <div className="w-full h-full flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
-          <Bot className="w-4 h-4 text-white" />
+      {/* Avatar - only shown when there's actual message content */}
+      {showAvatar && (
+        <div className="shrink-0 w-8 h-8">
+          <div className="w-full h-full flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+            <Bot className="w-4 h-4 text-white" />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Message */}
-      <div className="flex-1 max-w-[80%] space-y-2">
+      <div className={`flex-1 space-y-2 ${showAvatar ? 'max-w-[80%]' : 'w-full'}`}>
         {/* Render tool calls and actions (always visible, even during loading) */}
         {subComponent && (
           <div className="w-full">
@@ -91,7 +97,7 @@ export function AssistantMessage({ message, isLoading }: AssistantMessageProps) 
           </div>
         )}
 
-        {/* Loading indicator - shown when loading and no content yet */}
+        {/* Loading indicator - shown when loading and no content yet (even if tools are present) */}
         {isLoading && !messageContent && (
           <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg">
             <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
