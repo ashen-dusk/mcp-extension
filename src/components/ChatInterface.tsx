@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { ToolRenderer } from './playground/ToolRenderer';
 import ChatInput from './playground/ChatInput';
 import '@copilotkit/react-ui/styles.css';
-import { AssistantMessage, UserMessage } from './playground/ChatMessage';
+import { AssistantMessage } from './playground/ChatMessage';
 
 interface ChatInterfaceProps {
   onBack: () => void;

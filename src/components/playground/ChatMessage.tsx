@@ -53,10 +53,16 @@ export function AssistantMessage({ message, isLoading }: AssistantMessageProps) 
 
   const messageContent = getMessageContent();
 
-  console.log(messageContent, "AssistantMessage Content");
+  // Extract the generativeUI component (this is where tool renderings appear)
+  const subComponent = message && typeof message === 'object' && 'generativeUI' in message
+    ? (message as any).generativeUI?.()
+    : null;
 
-  // Don't render anything if there's no content and not loading
-  if (!messageContent && !isLoading) {
+  console.log(messageContent, "AssistantMessage Content");
+  console.log(subComponent, "AssistantMessage SubComponent");
+
+  // Don't render anything if there's no content, no subComponent, and not loading
+  if (!messageContent && !subComponent && !isLoading) {
     return null;
   }
 
@@ -70,16 +76,27 @@ export function AssistantMessage({ message, isLoading }: AssistantMessageProps) 
       </div>
 
       {/* Message */}
-      <div className="flex-1 max-w-[80%]">
-        {isLoading ? (
+      <div className="flex-1 max-w-[80%] space-y-2">
+        {/* Render tool calls and actions (always visible, even during loading) */}
+        {subComponent && (
+          <div className="w-full">
+            {subComponent}
+          </div>
+        )}
+
+        {/* Message content */}
+        {messageContent && !isLoading && (
+          <div className="prose prose-sm dark:prose-invert max-w-none">
+            <Markdown content={messageContent} />
+          </div>
+        )}
+
+        {/* Loading indicator - shown when loading and no content yet */}
+        {isLoading && !messageContent && (
           <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg">
             <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
             <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
             <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce"></div>
-          </div>
-        ) : (
-          <div className="prose prose-sm dark:prose-invert max-w-none">
-            {messageContent && <Markdown content={messageContent} />}
           </div>
         )}
       </div>
