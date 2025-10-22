@@ -139,6 +139,12 @@ export function WhatsNext({ onBack, user }: WhatsNextProps) {
           </div>
           <div className="flex items-center gap-3">
             <button
+              onClick={() => chrome.tabs.create({ url: 'https://modelcontextprotocol.io' })}
+              className="hover:text-foreground transition-colors"
+            >
+              MCP
+            </button>
+            <button
               onClick={() => chrome.tabs.create({ url: 'https://ashen-dusk.github.io/mcp-extension/privacy.html' })}
               className="hover:text-foreground transition-colors"
             >
