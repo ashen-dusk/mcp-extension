@@ -75,21 +75,27 @@ export default function ChatInput({ onSendMessage, user }: CustomChatInputProps)
     } else {
       id = email || '';
     }
-    setSessionId(id);
 
-    setState((prevState: AgentState | undefined) => ({
-      model: prevState?.model ?? "gpt-4o-mini",
-      status: prevState?.status,
-      sessionId: id,
-    }));
-  }, [user?.email, setState]);
+    // Only update if the session ID actually changed
+    if (id !== sessionId) {
+      setSessionId(id);
+
+      setState((prevState: AgentState | undefined) => ({
+        model: prevState?.model ?? "gpt-4o-mini",
+        status: prevState?.status,
+        sessionId: id,
+      }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.email]);
 
   // Sync local state with coagent state
   useEffect(() => {
     if (state?.model && state.model !== selectedModel) {
       setSelectedModel(state.model);
     }
-  }, [state?.model, selectedModel]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state?.model]);
 
   const handleModelChange = (modelId: string) => {
     // Update local state immediately for UI responsiveness
