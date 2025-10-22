@@ -219,12 +219,12 @@ export function ServerList({
             >
               Privacy
             </button>
-            <button
+            {/* <button
               onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/docs' })}
               className="hover:text-foreground transition-colors"
             >
               Docs
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
