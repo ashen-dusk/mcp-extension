@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogIn, Loader2 } from 'lucide-react';
+import { LogIn, UserCheck, Plug, MessageSquare, ToggleLeft } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
@@ -55,24 +55,75 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
             className="w-full"
             size="lg"
           >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
-              </>
-            ) : (
               <>
                 <LogIn className="mr-2 h-4 w-4" />
                 Sign in with Google
               </>
-            )}
           </Button>
 
           {error && (
             <p className="text-sm text-destructive text-center">{error}</p>
           )}
 
-          <div className="text-xs text-muted-foreground text-center pt-4">
+          {/* Getting Started Guide */}
+          <div className="mt-6 pt-6 border-t border-border">
+            <h3 className="text-sm font-semibold text-foreground mb-4 text-center">How to Get Started</h3>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0 mt-0.5">
+                  1
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <UserCheck className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-xs font-medium text-foreground">Sign In</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Authenticate with your Google account to access the assistant</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0 mt-0.5">
+                  2
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Plug className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-xs font-medium text-foreground">Connect MCP Servers</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Browse available MCPs (e.g., Tavily for web search) and click connect to enable their tools</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0 mt-0.5">
+                  3
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <MessageSquare className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-xs font-medium text-foreground">Ask Your Agent</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Start chatting and ask about real-time events using connected MCP capabilities</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex-shrink-0 mt-0.5">
+                  4
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ToggleLeft className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-xs font-medium text-foreground">Manage Context</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Toggle the context button to exclude specific MCPs from agent interactions</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs text-muted-foreground text-center pt-6">
             <p>By signing in, you agree to use your existing</p>
             <p>MCP Assistant account credentials</p>
           </div>

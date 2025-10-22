@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useCoAgent } from '@copilotkit/react-core';
 import { Button } from "@/components/ui/button";
 import {
   ChevronDown,
@@ -11,8 +12,17 @@ import {
 interface CustomChatInputProps {
   onSendMessage: (message: string) => void;
   isLoading?: boolean;
-  state: any;
-  setState: React.Dispatch<React.SetStateAction<any>>;
+  user?: {
+    name: string;
+    email: string;
+    image: string;
+  };
+}
+
+interface AgentState {
+  model: string;
+  status: string | null | undefined;
+  sessionId: string;
 }
 
 const AVAILABLE_MODELS = [
@@ -31,22 +41,67 @@ const AVAILABLE_MODELS = [
     name: "GPT-3.5 Turbo",
     description: "Quick responses, good for simple queries"
   },
-  {
-    id: "deepseek-chat",
-    name: "DeepSeek-V3",
-    description: "Excellent at coding and technical tasks"
-  },
+  // {
+  //   id: "deepseek-chat",
+  //   name: "DeepSeek-V3",
+  //   description: "Excellent at coding and technical tasks"
+  // },
 ];
 
-export default function ChatInput({ onSendMessage, state, setState }: CustomChatInputProps) {
+export default function ChatInput({ onSendMessage, user }: CustomChatInputProps) {
   const [message, setMessage] = useState("");
   const [showModelDropdown, setShowModelDropdown] = useState(false);
+  const [sessionId, setSessionId] = useState<string>('');
+
+  // Separate local state for model selection
+  const [selectedModel, setSelectedModel] = useState("gpt-4o-mini");
+
+  // Initialize agent state with session ID
+  const { state, setState } = useCoAgent<AgentState>({
+    name: "mcpAssistant",
+    initialState: {
+      model: "gpt-4o-mini",
+      status: undefined,
+      sessionId: sessionId,
+    },
+  });
+
+  // Update session ID when user changes
+  useEffect(() => {
+    const email = user?.email;
+    let id = '';
+    if (email && email.endsWith("@gmail.com")) {
+      id = email.replace(/@gmail\.com$/, "");
+    } else {
+      id = email || '';
+    }
+    setSessionId(id);
+
+    setState((prevState: AgentState | undefined) => ({
+      model: prevState?.model ?? "gpt-4o-mini",
+      status: prevState?.status,
+      sessionId: id,
+    }));
+  }, [user?.email, setState]);
+
+  // Sync local state with coagent state
+  useEffect(() => {
+    if (state?.model && state.model !== selectedModel) {
+      setSelectedModel(state.model);
+    }
+  }, [state?.model, selectedModel]);
 
   const handleModelChange = (modelId: string) => {
-    setState((prevState: any) => ({
-      ...prevState,
+    // Update local state immediately for UI responsiveness
+    setSelectedModel(modelId);
+
+    // Update coagent state only when model is selected
+    setState((prevState: AgentState | undefined) => ({
       model: modelId,
+      status: prevState?.status,
+      sessionId: prevState?.sessionId ?? sessionId,
     }));
+
     setShowModelDropdown(false);
   };
 
@@ -64,7 +119,7 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
     }
   };
 
-  const selectedModelData = AVAILABLE_MODELS.find(m => m.id === state.model) || AVAILABLE_MODELS[0];
+  const selectedModelData = AVAILABLE_MODELS.find(m => m.id === selectedModel);
 
   return (
     <div className="w-full px-4 py-3 bg-background">
@@ -113,16 +168,16 @@ export default function ChatInput({ onSendMessage, state, setState }: CustomChat
                         key={model.id}
                         onClick={() => handleModelChange(model.id)}
                         className={`w-full flex flex-col px-4 py-3 text-left transition-all duration-150
-                          ${state.model === model.id
+                          ${selectedModel === model.id
                             ? 'bg-blue-600/20 border-l-2 border-blue-400'
                             : 'text-muted-foreground hover:bg-accent hover:text-foreground border-l-2 border-transparent'
                           }`}
                       >
                         <div className="flex items-center justify-between w-full mb-1">
-                          <span className={`text-sm font-semibold ${state.model === model.id ? 'text-blue-400' : 'text-foreground'}`}>
+                          <span className={`text-sm font-semibold ${selectedModel === model.id ? 'text-blue-400' : 'text-foreground'}`}>
                             {model.name}
                           </span>
-                          {state.model === model.id && (
+                          {selectedModel === model.id && (
                             <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0" />
                           )}
                         </div>
