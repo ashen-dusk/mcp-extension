@@ -22,13 +22,18 @@ function AppContent() {
     connectServer,
     disconnectServer,
     toggleContext,
-  } = useMcpServers();
+  } = useMcpServers(isAuthenticated);
 
   // Show loading screen while checking authentication
   if (authLoading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <div className="flex items-center space-x-3">
+          <span className="font-semibold text-foreground text-lg">
+            Signing you in
+          </span>
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
       </div>
     );
   }

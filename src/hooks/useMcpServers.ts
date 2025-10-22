@@ -1,12 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import { McpServer, Message } from '@/types';
 
-export function useMcpServers() {
+export function useMcpServers(isAuthenticated: boolean = false) {
   const [servers, setServers] = useState<McpServer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchServers = useCallback(async () => {
+    // Don't fetch if not authenticated
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -22,7 +28,7 @@ export function useMcpServers() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   // COMMENTED OUT: Add/Edit/Delete server features
   // const addServer = async (serverData: any) => {
