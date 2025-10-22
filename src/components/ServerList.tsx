@@ -202,7 +202,7 @@ export function ServerList({
       <div className="border-t px-4 py-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="font-medium">v1.0.0</span>
+            <span className="font-medium">v1.1.0</span>
             <span className="text-muted-foreground/60">•</span>
             <span>{servers.filter(s => s.connectionStatus === 'CONNECTED').length} connected</span>
           </div>
