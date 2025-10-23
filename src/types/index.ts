@@ -24,6 +24,7 @@ export type McpServer = {
 export type AuthState = {
   isAuthenticated: boolean;
   googleIdToken?: string;
+  googleIdTokenExpires?: number;
   user?: {
     name: string;
     email: string;

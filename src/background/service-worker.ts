@@ -2,6 +2,18 @@ import { Message, AuthState } from '../types';
 import { storage } from '../lib/storage';
 import { api } from '../lib/api';
 
+function decodeJwtExpiry(token: string): number | null {
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1]));
+    return payload.exp ? payload.exp * 1000 : null;
+  } catch (error) {
+    console.error('Error decoding JWT:', error);
+    return null;
+  }
+}
+
 // Initialize extension
 chrome.runtime.onInstalled.addListener(() => {
   console.log('MCP Assistant Extension installed');
@@ -67,6 +79,17 @@ async function handleMessage(message: Message): Promise<any> {
 
 async function handleAuthCheck(): Promise<{ success: boolean; authState: AuthState | null }> {
   const authState = await storage.getAuthState();
+
+  // If authenticated, check if token is expired
+  if (authState?.isAuthenticated) {
+    const isExpired = await storage.isTokenExpired();
+    if (isExpired) {
+      // Clear expired auth state
+      await storage.clearAuthState();
+      return { success: true, authState: null };
+    }
+  }
+
   return { success: true, authState };
 }
 
@@ -118,12 +141,14 @@ async function handleAuthLogin(): Promise<{ success: boolean; authState?: AuthSt
       throw new Error('No ID token received from Google');
     }
 
-    // Decode the ID token to get user info (without verification - backend will verify)
+    // Decode the ID token to get user info and expiry
     const payload = JSON.parse(atob(idToken.split('.')[1]));
+    const tokenExpiry = decodeJwtExpiry(idToken);
 
     const authState: AuthState = {
       isAuthenticated: true,
       googleIdToken: idToken,
+      googleIdTokenExpires: tokenExpiry || undefined,
       user: {
         name: payload.name,
         email: payload.email,

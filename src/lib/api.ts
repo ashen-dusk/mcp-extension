@@ -193,7 +193,13 @@ async function makeGraphQLRequest<T = any>(
   const token = await storage.getGoogleIdToken();
 
   if (!token) {
-    throw new Error('Not authenticated');
+    throw new Error('Not authenticated. Please sign in again.');
+  }
+
+  // Check if token is expired
+  const isExpired = await storage.isTokenExpired();
+  if (isExpired) {
+    throw new Error('Session expired. Please sign in again.');
   }
 
   const response = await fetch(GRAPHQL_ENDPOINT, {
@@ -216,7 +222,14 @@ async function makeGraphQLRequest<T = any>(
   const result = await response.json();
 
   if (!response.ok || result.errors) {
-    throw new Error(result.errors?.[0]?.message || 'Request failed');
+    const errorMessage = result.errors?.[0]?.message || 'Request failed';
+
+    // Check if it's an authentication error
+    if (errorMessage.includes('Token expired') || errorMessage.includes('Authentication')) {
+      throw new Error('Session expired. Please sign in again.');
+    }
+
+    throw new Error(errorMessage);
   }
 
   return result.data;
