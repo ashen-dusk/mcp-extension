@@ -84,7 +84,7 @@ async function handleAuthCheck(): Promise<{ success: boolean; authState: AuthSta
   if (authState?.isAuthenticated) {
     const isExpired = await storage.isTokenExpired();
     if (isExpired) {
-      // Clear expired auth state
+      console.log(`[Auth] Token expired at ${authState.googleIdTokenExpires ? new Date(authState.googleIdTokenExpires).toISOString() : 'unknown'}. Session cleared.`);
       await storage.clearAuthState();
       return { success: true, authState: null };
     }
