@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const BACKEND_URL = 'https://api.quicklit.in/gen-ai';
+export const BACKEND_URL = 'http://localhost:8000';
 export const GRAPHQL_ENDPOINT = `${BACKEND_URL}/api/graphql`;
 export const AUTH_ENDPOINT = `${BACKEND_URL}/api/auth`;
 

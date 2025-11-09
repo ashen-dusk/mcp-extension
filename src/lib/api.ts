@@ -1,6 +1,6 @@
 import { GRAPHQL_ENDPOINT } from './utils';
 import { storage } from './storage';
-import { McpServer } from '@/types';
+import { McpServer, Category } from '@/types';
 
 export const SAVE_MCP_SERVER_MUTATION = `
   mutation SaveMcpServer(
@@ -48,166 +48,163 @@ export const REMOVE_MCP_SERVER_MUTATION = `
   }
 `;
 
-export const MCP_SERVERS_QUERY = `
-  query GetMcpServers {
-    mcpServers {
+export const TOOL_INFO_FRAGMENT = `
+  fragment ToolInfoFields on ToolInfo {
+    name
+    description
+    schema
+  }
+`;
+
+export const MCP_SERVER_FRAGMENT = `
+  fragment McpServerFields on MCPServerType {
+    id
+    name
+    transport
+    url
+    command
+    category {
       id
       name
-      transport
-      url
-      command
-      args
-      enabled
-      requiresOauth2
-      connectionStatus
-      tools {
-        name
-        description
-        schema
+      slug
+    }
+    args
+    enabled
+    description
+    requiresOauth2
+    connectionStatus
+    tools { ...ToolInfoFields }
+    updatedAt
+    createdAt
+    owner
+    isPublic
+  }
+  ${TOOL_INFO_FRAGMENT}
+`;
+
+export const MCP_SERVERS_QUERY = `
+  query McpServers($first: Int, $after: String, $order: MCPServerOrder, $filters: MCPServerFilter) {
+    mcpServers(first: $first, after: $after, order: $order, filters: $filters) {
+      totalCount
+      edges {
+        node {
+          ...McpServerFields
+        }
+        cursor
       }
-      updatedAt
-      owner
-      isPublic
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+  ${MCP_SERVER_FRAGMENT}
+`;
+
+export const CATEGORIES_QUERY = `
+  query Categories($first: Int, $after: String) {
+    categories(first: $first, after: $after) {
+      edges {
+        node {
+          id
+          name
+          icon
+          color
+          description
+          slug
+        }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
     }
   }
 `;
 
 export const RESTART_MCP_SERVER_MUTATION = `
-  mutation RestartMcpServer($name: String!) {
-    restartMcpServer(name: $name) {
+  mutation RestartMcpServer($serverName: String!) {
+    restartMcpServer(name: $serverName) {
       success
       message
       connectionStatus
-      server {
-        id
-        name
-        transport
-        url
-        command
-        args
-        enabled
-        requiresOauth2
-        connectionStatus
-        tools {
-          name
-          description
-          schema
-        }
-        updatedAt
-        createdAt
-        owner
-        isPublic
-      }
+      requiresAuth
+      authorizationUrl
+      state
+      server { ...McpServerFields }
     }
   }
+  ${MCP_SERVER_FRAGMENT}
 `;
 
 export const CONNECT_MCP_SERVER_MUTATION = `
-  mutation ConnectMcpServer($name: String!) {
-    connectMcpServer(name: $name) {
+  mutation ConnectServer($serverName: String!) {
+    connectMcpServer(name: $serverName) {
       success
       message
       connectionStatus
-      server {
-        id
-        name
-        transport
-        url
-        command
-        args
-        enabled
-        requiresOauth2
-        connectionStatus
-        tools {
-          name
-          description
-          schema
-        }
-        updatedAt
-        createdAt
-        owner
-        isPublic
-      }
+      requiresAuth
+      authorizationUrl
+      state
+      server { ...McpServerFields }
     }
   }
+  ${MCP_SERVER_FRAGMENT}
 `;
 
 export const DISCONNECT_MCP_SERVER_MUTATION = `
-  mutation DisconnectMcpServer($name: String!) {
-    disconnectMcpServer(name: $name) {
+  mutation DisconnectServer($serverName: String!) {
+    disconnectMcpServer(name: $serverName) {
       success
       message
-      server {
-        id
-        name
-        transport
-        url
-        command
-        args
-        enabled
-        requiresOauth2
-        connectionStatus
-        tools {
-          name
-          description
-          schema
-        }
-        updatedAt
-        createdAt
-        owner
-        isPublic
-      }
+      server { ...McpServerFields }
     }
   }
+  ${MCP_SERVER_FRAGMENT}
 `;
 
 export const TOGGLE_CONTEXT_MUTATION = `
   mutation SetServerEnabled($serverName: String!, $enabled: Boolean!) {
     setMcpServerEnabled(name: $serverName, enabled: $enabled) {
-      id
-      name
-      transport
-      url
-      command
-      args
-      enabled
-      requiresOauth2
-      connectionStatus
-      tools {
-        name
-        description
-        schema
-      }
-      updatedAt
-      createdAt
-      owner
-      isPublic
+      ...McpServerFields
     }
   }
+  ${MCP_SERVER_FRAGMENT}
 `;
 
 async function makeGraphQLRequest<T = any>(
   query: string,
-  variables?: Record<string, any>
+  variables?: Record<string, any>,
+  requiresAuth: boolean = true
 ): Promise<T> {
-  const token = await storage.getGoogleIdToken();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
 
-  if (!token) {
-    throw new Error('Not authenticated. Please sign in again.');
-  }
+  if (requiresAuth) {
+    const token = await storage.getGoogleIdToken();
 
-  // Check if token is expired
-  const isExpired = await storage.isTokenExpired();
-  if (isExpired) {
-    throw new Error('Session expired. Please sign in again.');
+    if (!token) {
+      throw new Error('Not authenticated. Please sign in again.');
+    }
+
+    // Check if token is expired
+    const isExpired = await storage.isTokenExpired();
+    if (isExpired) {
+      throw new Error('Session expired. Please sign in again.');
+    }
+
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
   const response = await fetch(GRAPHQL_ENDPOINT, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
+    headers,
     body: JSON.stringify({ query, variables }),
   });
 
@@ -236,9 +233,54 @@ async function makeGraphQLRequest<T = any>(
 }
 
 export const api = {
-  async fetchServers(): Promise<McpServer[]> {
-    const data = await makeGraphQLRequest<{ mcpServers: McpServer[] }>(MCP_SERVERS_QUERY);
-    return data.mcpServers;
+  async fetchServers(categoryId?: string): Promise<McpServer[]> {
+    const filters: any = {
+      isPublic: { exact: true },
+      requiresOauth2: { exact: false }
+    };
+
+    // Add category filter if provided
+    if (categoryId) {
+      filters.category = {
+        id: { exact: categoryId }
+      };
+    }
+
+    const data = await makeGraphQLRequest<{
+      mcpServers: {
+        edges: Array<{ node: McpServer }>
+      }
+    }>(
+      MCP_SERVERS_QUERY,
+      { filters },
+      true // Auth required to get session-specific connection status
+    );
+    return data.mcpServers.edges.map(edge => edge.node);
+  },
+
+  async fetchCategories(): Promise<Category[]> {
+    const data = await makeGraphQLRequest<{
+      categories: {
+        edges: Array<{ node: Omit<Category, 'servers'> }>
+      }
+    }>(CATEGORIES_QUERY, undefined, true); // Auth required for session-specific connection status
+
+    // Fetch servers and group them by category
+    const servers = await this.fetchServers();
+
+    // Map categories with their servers
+    return data.categories.edges
+      .map(edge => {
+        const category = edge.node;
+        const categoryServers = servers.filter(
+          server => server.category?.id === category.id
+        );
+        return {
+          ...category,
+          servers: categoryServers
+        };
+      })
+      .filter(category => category.servers.length > 0); // Only return categories with servers
   },
 
   // COMMENTED OUT: Add/Edit/Delete server features
@@ -267,22 +309,22 @@ export const api = {
   // },
 
   async restartServer(serverName: string): Promise<any> {
-    const data = await makeGraphQLRequest(RESTART_MCP_SERVER_MUTATION, { name: serverName });
+    const data = await makeGraphQLRequest(RESTART_MCP_SERVER_MUTATION, { serverName }, true);
     return data.restartMcpServer;
   },
 
   async connectServer(serverName: string): Promise<any> {
-    const data = await makeGraphQLRequest(CONNECT_MCP_SERVER_MUTATION, { name: serverName });
+    const data = await makeGraphQLRequest(CONNECT_MCP_SERVER_MUTATION, { serverName }, true);
     return data.connectMcpServer;
   },
 
   async disconnectServer(serverName: string): Promise<any> {
-    const data = await makeGraphQLRequest(DISCONNECT_MCP_SERVER_MUTATION, { name: serverName });
+    const data = await makeGraphQLRequest(DISCONNECT_MCP_SERVER_MUTATION, { serverName }, true);
     return data.disconnectMcpServer;
   },
 
   async toggleContext(serverName: string, enabled: boolean): Promise<any> {
-    const data = await makeGraphQLRequest(TOGGLE_CONTEXT_MUTATION, { serverName, enabled });
+    const data = await makeGraphQLRequest(TOGGLE_CONTEXT_MUTATION, { serverName, enabled }, true);
     return data.setMcpServerEnabled;
   },
 };

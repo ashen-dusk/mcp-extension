@@ -4,9 +4,22 @@ export type ToolInfo = {
   schema: any;
 };
 
+export type Category = {
+  id: string;
+  name: string;
+  icon?: string | null;
+  color?: string | null;
+  description?: string | null;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  servers: McpServer[];
+};
+
 export type McpServer = {
   id: string;
   name: string;
+  description?: string | null;
   transport: string;
   owner?: string | null;
   url?: string | null;
@@ -19,6 +32,7 @@ export type McpServer = {
   tools: ToolInfo[];
   updatedAt: string;
   createdAt?: string;
+  category?: Category | null;
 };
 
 export type AuthState = {
@@ -39,6 +53,7 @@ export type MessageType =
   | 'AUTH_LOGOUT'
   | 'AUTH_STATE'
   | 'FETCH_SERVERS'
+  | 'FETCH_CATEGORIES'
   // COMMENTED OUT: Add/Edit/Delete server features
   // | 'ADD_SERVER'
   // | 'UPDATE_SERVER'

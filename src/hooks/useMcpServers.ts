@@ -1,34 +1,59 @@
 import { useState, useEffect, useCallback } from 'react';
-import { McpServer, Message } from '@/types';
+import { McpServer, Category, Message } from '@/types';
 
-export function useMcpServers(isAuthenticated: boolean = false) {
+export function useMcpServers() {
   const [servers, setServers] = useState<McpServer[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
-  const fetchServers = useCallback(async () => {
-    // Don't fetch if not authenticated
-    if (!isAuthenticated) {
-      setLoading(false);
-      return;
-    }
-
+  const fetchServers = useCallback(async (categoryId?: string) => {
+    // Fetch public servers even without authentication
     try {
       setLoading(true);
       setError(null);
-      const response = await chrome.runtime.sendMessage<Message>({ type: 'FETCH_SERVERS' });
 
-      if (response.success) {
-        setServers(response.data || []);
+      // Only fetch categories on initial load (when not yet loaded)
+      if (!categoriesLoaded) {
+        // Fetch both servers and categories in parallel on initial load
+        const [serversResponse, categoriesResponse] = await Promise.all([
+          chrome.runtime.sendMessage<Message>({
+            type: 'FETCH_SERVERS',
+            payload: categoryId ? { categoryId } : undefined
+          }),
+          chrome.runtime.sendMessage<Message>({ type: 'FETCH_CATEGORIES' })
+        ]);
+
+        if (serversResponse.success) {
+          setServers(serversResponse.data || []);
+        } else {
+          setError(serversResponse.error || 'Failed to fetch servers');
+        }
+
+        if (categoriesResponse.success) {
+          setCategories(categoriesResponse.data || []);
+          setCategoriesLoaded(true);
+        }
       } else {
-        setError(response.error || 'Failed to fetch servers');
+        // Only fetch servers when filtering (categories already loaded)
+        const serversResponse = await chrome.runtime.sendMessage<Message>({
+          type: 'FETCH_SERVERS',
+          payload: categoryId ? { categoryId } : undefined
+        });
+
+        if (serversResponse.success) {
+          setServers(serversResponse.data || []);
+        } else {
+          setError(serversResponse.error || 'Failed to fetch servers');
+        }
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch servers');
+      setError(err instanceof Error ? err.message : 'Failed to fetch data');
     } finally {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [categoriesLoaded]);
 
   // COMMENTED OUT: Add/Edit/Delete server features
   // const addServer = async (serverData: any) => {
@@ -95,10 +120,23 @@ export function useMcpServers(isAuthenticated: boolean = false) {
       if (response.success) {
         // Update local state with server data from response
         if (response.data && response.data.server) {
+          const updatedServer = response.data.server;
+
+          // Update servers array
           setServers(prevServers =>
             prevServers.map(server =>
-              server.name === serverName ? response.data.server : server
+              server.name === serverName ? updatedServer : server
             )
+          );
+
+          // Also update servers inside categories
+          setCategories(prevCategories =>
+            prevCategories.map(category => ({
+              ...category,
+              servers: category.servers.map(server =>
+                server.name === serverName ? updatedServer : server
+              )
+            }))
           );
         }
         return { success: true };
@@ -120,10 +158,23 @@ export function useMcpServers(isAuthenticated: boolean = false) {
       if (response.success) {
         // Update local state with server data from response
         if (response.data && response.data.server) {
+          const updatedServer = response.data.server;
+
+          // Update servers array
           setServers(prevServers =>
             prevServers.map(server =>
-              server.name === serverName ? response.data.server : server
+              server.name === serverName ? updatedServer : server
             )
+          );
+
+          // Also update servers inside categories
+          setCategories(prevCategories =>
+            prevCategories.map(category => ({
+              ...category,
+              servers: category.servers.map(server =>
+                server.name === serverName ? updatedServer : server
+              )
+            }))
           );
         }
         return { success: true };
@@ -149,6 +200,17 @@ export function useMcpServers(isAuthenticated: boolean = false) {
             server.name === serverName ? { ...server, enabled } : server
           )
         );
+
+        // Also update servers inside categories
+        setCategories(prevCategories =>
+          prevCategories.map(category => ({
+            ...category,
+            servers: category.servers.map(server =>
+              server.name === serverName ? { ...server, enabled } : server
+            )
+          }))
+        );
+
         return { success: true };
       } else {
         return { success: false, error: response.error };
@@ -168,10 +230,23 @@ export function useMcpServers(isAuthenticated: boolean = false) {
       if (response.success) {
         // Update local state with server data from response
         if (response.data && response.data.server) {
+          const updatedServer = response.data.server;
+
+          // Update servers array
           setServers(prevServers =>
             prevServers.map(server =>
-              server.name === serverName ? response.data.server : server
+              server.name === serverName ? updatedServer : server
             )
+          );
+
+          // Also update servers inside categories
+          setCategories(prevCategories =>
+            prevCategories.map(category => ({
+              ...category,
+              servers: category.servers.map(server =>
+                server.name === serverName ? updatedServer : server
+              )
+            }))
           );
         }
         return { success: true };
@@ -189,6 +264,7 @@ export function useMcpServers(isAuthenticated: boolean = false) {
 
   return {
     servers,
+    categories,
     loading,
     error,
     fetchServers,

@@ -48,7 +48,10 @@ async function handleMessage(message: Message): Promise<any> {
       return await handleAuthLogout();
 
     case 'FETCH_SERVERS':
-      return await handleFetchServers();
+      return await handleFetchServers(message.payload);
+
+    case 'FETCH_CATEGORIES':
+      return await handleFetchCategories();
 
     // COMMENTED OUT: Add/Edit/Delete server features
     // case 'ADD_SERVER':
@@ -179,15 +182,28 @@ async function handleAuthLogout(): Promise<{ success: boolean }> {
   }
 }
 
-async function handleFetchServers(): Promise<any> {
+async function handleFetchServers(payload?: { categoryId?: string }): Promise<any> {
   try {
-    const servers = await api.fetchServers();
+    const servers = await api.fetchServers(payload?.categoryId);
     return { success: true, data: servers };
   } catch (error) {
     console.error('Fetch servers error:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to fetch servers'
+    };
+  }
+}
+
+async function handleFetchCategories(): Promise<any> {
+  try {
+    const categories = await api.fetchCategories();
+    return { success: true, data: categories };
+  } catch (error) {
+    console.error('Fetch categories error:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch categories'
     };
   }
 }

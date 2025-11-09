@@ -13,17 +13,6 @@ type View = 'servers' | 'chat' | 'whatsnext';
 function AppContent() {
   const [currentView, setCurrentView] = useState<View>('servers');
   const { authState, loading: authLoading, isAuthenticated, login, logout } = useAuth();
-  const {
-    servers,
-    loading: serversLoading,
-    fetchServers,
-    restartServer,
-    // COMMENTED OUT: Delete server feature
-    // deleteServer,
-    connectServer,
-    disconnectServer,
-    toggleContext,
-  } = useMcpServers(isAuthenticated);
 
   // Show loading screen while checking authentication
   if (authLoading) {
@@ -44,11 +33,46 @@ function AppContent() {
     return <LoginScreen onLogin={login} />;
   }
 
+  // Only load servers after authentication is complete
+  return <AuthenticatedContent
+    currentView={currentView}
+    setCurrentView={setCurrentView}
+    authState={authState}
+    logout={logout}
+  />;
+}
+
+function AuthenticatedContent({
+  currentView,
+  setCurrentView,
+  authState,
+  logout
+}: {
+  currentView: View;
+  setCurrentView: (view: View) => void;
+  authState: any;
+  logout: () => Promise<void>;
+}) {
+  const {
+    servers,
+    categories,
+    loading: serversLoading,
+    fetchServers,
+    restartServer,
+    // COMMENTED OUT: Delete server feature
+    // deleteServer,
+    connectServer,
+    disconnectServer,
+    toggleContext,
+  } = useMcpServers();
+
   // Show what's next page
   if (currentView === 'whatsnext') {
     return (
       <WhatsNext
         onBack={() => setCurrentView('servers')}
+        onChat={() => setCurrentView('chat')}
+        onLogout={logout}
         user={authState?.user}
       />
     );
@@ -59,6 +83,8 @@ function AppContent() {
     return (
       <ChatInterface
         onBack={() => setCurrentView('servers')}
+        onWhatsNext={() => setCurrentView('whatsnext')}
+        onLogout={logout}
         user={authState?.user}
       />
     );
@@ -68,6 +94,7 @@ function AppContent() {
   return (
     <ServerList
       servers={servers}
+      categories={categories}
       loading={serversLoading}
       onRefresh={fetchServers}
       onRestart={restartServer}

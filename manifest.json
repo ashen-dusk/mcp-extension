@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MCP Assistant",
-  "version": "1.1.0",
+  "version": "0.1.2",
   "description": "Manage your MCP servers and interact with your AI assistant from anywhere",
   "permissions": [
     "storage",
@@ -10,6 +10,10 @@
   ],
   "host_permissions": [
     "https://mcpassistant.vercel.app/*",
+    "https://mcp-assistant.in/*",
+    "https://mcpassistant.in/*",
+    "https://api.mcpassistant.in/*",
+    "https://api.mcp-assistant.in/*",
     "https://api.quicklit.in/*",
     "https://express-copilotkit-runtime.vercel.app/*",
     "https://*.googleapis.com/*",

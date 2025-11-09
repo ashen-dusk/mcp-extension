@@ -1,9 +1,11 @@
-import { Button } from './ui/button';
-import { ArrowLeft, Sparkles, Package, Lock, Server, BarChart3, Mic } from 'lucide-react';
+import { Header } from './Header';
+import { Sparkles, Package, Lock, Server, BarChart3, Mic } from 'lucide-react';
 import { Card } from './ui/card';
 
 interface WhatsNextProps {
   onBack: () => void;
+  onLogout: () => void;
+  onChat?: () => void;
   user?: {
     name: string;
     email: string;
@@ -44,21 +46,16 @@ const upcomingFeatures = [
   },
 ];
 
-export function WhatsNext({ onBack, user }: WhatsNextProps) {
+export function WhatsNext({ onBack, onLogout, onChat, user }: WhatsNextProps) {
   return (
     <div className="w-full h-screen flex flex-col bg-background">
-      {/* Header */}
-      <div className="p-3 border-b flex items-center gap-2 bg-background">
-        <Button variant="ghost" size="icon" onClick={onBack} className="h-8 w-8">
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-semibold truncate">What's Next</h1>
-          <span className="text-xs text-muted-foreground truncate block">
-            {user?.email}
-          </span>
-        </div>
-      </div>
+      <Header
+        user={user}
+        onServers={onBack}
+        onChat={onChat}
+        onLogout={onLogout}
+        currentView="whatsnext"
+      />
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4">
