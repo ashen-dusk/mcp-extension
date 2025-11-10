@@ -1,5 +1,5 @@
 import { Button } from './ui/button';
-import { RefreshCw, MessageSquare, ExternalLink, Sparkles, LogOut, Loader2, Home } from 'lucide-react';
+import { MessageSquare, ExternalLink, Sparkles, LogOut, Home } from 'lucide-react';
 
 interface HeaderProps {
   user?: {
@@ -20,12 +20,12 @@ interface HeaderProps {
 export function Header({
   user,
   onServers,
-  onRefresh,
+  // onRefresh,
   onChat,
   onWeb,
   onWhatsNext,
   onLogout,
-  refreshing = false,
+  // refreshing = false,
   currentView = 'servers'
 }: HeaderProps) {
   const openFullApp = () => {

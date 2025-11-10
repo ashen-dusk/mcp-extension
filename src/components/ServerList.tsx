@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
 import { McpServer, Category } from '@/types';
 import { ServerCard } from './ServerCard';
-import { CategorySection } from './CategorySection';
+// import { CategorySection } from './CategorySection';
 import { Button } from './ui/button';
 import { Header } from './Header';
-import { ExternalLink, RefreshCw, LogOut, Loader2, MessageSquare, Sparkles, Filter, X, ChevronDown } from 'lucide-react';
+import { ExternalLink, RefreshCw, Loader2, Filter, X, ChevronDown } from 'lucide-react';
 
 interface ServerListProps {
   servers: McpServer[];

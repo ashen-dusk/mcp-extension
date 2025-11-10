@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogIn, UserCheck, Plug, MessageSquare, ToggleLeft } from 'lucide-react';
+import { UserCheck, Plug, MessageSquare, ToggleLeft } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
