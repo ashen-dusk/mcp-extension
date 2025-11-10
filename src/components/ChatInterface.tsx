@@ -75,7 +75,7 @@ export function ChatInterface({ onBack, onLogout, onWhatsNext, user }: ChatInter
               Privacy
             </button>
             <button
-              onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/docs' })}
+              onClick={() => chrome.tabs.create({ url: 'https://www.mcp-assistant.in/docs' })}
               className="hover:text-foreground transition-colors"
             >
               Help

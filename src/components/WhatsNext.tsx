@@ -1,6 +1,7 @@
 import { Header } from './Header';
 import { Sparkles, Package, Lock, Server, BarChart3, Mic } from 'lucide-react';
 import { Card } from './ui/card';
+import { Button } from './ui/button';
 
 interface WhatsNextProps {
   onBack: () => void;
@@ -117,7 +118,7 @@ export function WhatsNext({ onBack, onLogout, onChat, user }: WhatsNextProps) {
             </p>
             <Button
               variant="outline"
-              onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/feedback' })}
+              onClick={() => chrome.tabs.create({ url: 'https://www.mcp-assistant.in/feedback' })}
               className="gap-2"
             >
               Share Your Feedback
@@ -148,7 +149,7 @@ export function WhatsNext({ onBack, onLogout, onChat, user }: WhatsNextProps) {
               Privacy
             </button>
             <button
-              onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/docs' })}
+              onClick={() => chrome.tabs.create({ url: 'https://www.mcp-assistant.in/docs' })}
               className="hover:text-foreground transition-colors"
             >
               Help

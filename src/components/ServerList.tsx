@@ -3,6 +3,7 @@ import { McpServer, Category } from '@/types';
 import { ServerCard } from './ServerCard';
 import { CategorySection } from './CategorySection';
 import { Button } from './ui/button';
+import { Header } from './Header';
 import { ExternalLink, RefreshCw, LogOut, Loader2, MessageSquare, Sparkles, Filter, X, ChevronDown } from 'lucide-react';
 
 interface ServerListProps {
@@ -109,117 +110,22 @@ export function ServerList({
   return (
     <div className="w-full h-screen flex flex-col bg-background">
       {/* Header */}
-      <div className="border-b bg-gradient-to-r from-background to-muted/20">
-        {/* Top Row - Branding & Profile */}
-        <div className="px-4 pt-4 pb-2 flex items-center justify-between">
-          {/* Logo & Title */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </div>
-
-            <div>
-              <h1 className="text-sm font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                MCP Assistant
-              </h1>
-            </div>
-          </div>
-
-          {/* Profile & Logout */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              {user?.image ? (
-                <img
-                  src={user.image}
-                  alt={user.name || user.email}
-                  className="w-7 h-7 rounded-full object-cover border-2 border-primary/20"
-                />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold">
-                  {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
-                </div>
-              )}
-              <span className="text-xs text-muted-foreground truncate max-w-[100px]">
-                {user?.name || user?.email}
-              </span>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onLogout}
-              className="h-8 w-8 rounded-full hover:bg-destructive/10 hover:text-destructive"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Navigation Row */}
-        <div className="px-4 pb-3 flex justify-center">
-          <div className="flex gap-0.5 bg-muted/50 rounded-lg p-0.5">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-4"
-              onClick={handleRefresh}
-              disabled={refreshing}
-            >
-              {refreshing ? (
-                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-              ) : (
-                <RefreshCw className="h-4 w-4 mr-1" />
-              )}
-              <span className="text-xs">Refresh</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-4"
-              onClick={onOpenChat}
-            >
-              <MessageSquare className="h-4 w-4 mr-1" />
-              <span className="text-xs">Chat</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-4"
-              onClick={openFullApp}
-            >
-              <ExternalLink className="h-4 w-4 mr-1" />
-              <span className="text-xs">Web</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-4"
-              onClick={onWhatsNext}
-            >
-              <Sparkles className="h-4 w-4 mr-1 text-purple-500" />
-              <span className="text-xs">What's Next</span>
-            </Button>
-          </div>
-        </div>
-      </div>
+      <Header
+        user={user}
+        onRefresh={handleRefresh}
+        onChat={onOpenChat}
+        onWhatsNext={onWhatsNext}
+        onLogout={onLogout}
+        refreshing={refreshing}
+        currentView="servers"
+      />
 
       {/* Server List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* Header with filter dropdown */}
         <div className="flex items-center justify-between gap-2">
           <div className="text-xs text-muted-foreground flex items-center gap-2">
-            <Filter className="h-3.5 w-3.5" />
+            {/* <Filter className="h-3.5 w-3.5" /> */}
             <span>
               {selectedCategoryId
                 ? `Filtered: ${categories.find(c => c.id === selectedCategoryId)?.name}`
@@ -227,28 +133,44 @@ export function ServerList({
             </span>
           </div>
 
-          {/* Dropdown Filter */}
-          <div className="relative">
+          {/* Refresh and Filter buttons */}
+          <div className="flex items-center gap-1.5">
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className="h-7 px-2 text-[10px] gap-1"
-              onClick={() => setShowCategoryFilter(!showCategoryFilter)}
+              className="h-7 px-2 text-[10px] gap-1 cursor-pointer hover:bg-accent"
+              onClick={handleRefresh}
+              disabled={refreshing}
             >
-              <Filter className="h-3 w-3" />
-              {selectedCategoryId ? (
-                <span className="max-w-[80px] truncate">
-                  {categories.find(c => c.id === selectedCategoryId)?.name}
-                </span>
+              {refreshing ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <span>All Categories</span>
+                <RefreshCw className="h-3 w-3" />
               )}
-              <ChevronDown className="h-3 w-3" />
             </Button>
 
-            {/* Dropdown Menu */}
-            {showCategoryFilter && (
-              <>
+            {/* Dropdown Filter */}
+            <div className="relative">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-[10px] gap-1"
+                onClick={() => setShowCategoryFilter(!showCategoryFilter)}
+              >
+                <Filter className="h-3 w-3" />
+                {selectedCategoryId ? (
+                  <span className="max-w-[80px] truncate">
+                    {categories.find(c => c.id === selectedCategoryId)?.name}
+                  </span>
+                ) : (
+                  <span>All Categories</span>
+                )}
+                <ChevronDown className="h-3 w-3" />
+              </Button>
+
+              {/* Dropdown Menu */}
+              {showCategoryFilter && (
+                <>
                 {/* Backdrop */}
                 <div
                   className="fixed inset-0 z-10"
@@ -297,7 +219,8 @@ export function ServerList({
                   </div>
                 </div>
               </>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
@@ -306,23 +229,20 @@ export function ServerList({
             {/* Loading skeleton */}
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="p-3 animate-pulse">
-                <div className="grid grid-cols-[auto_1fr] gap-4">
+                <div className="grid grid-cols-[minmax(130px,160px)_1fr] gap-3">
                   {/* Left Side Skeleton */}
-                  <div className="min-w-[180px] space-y-3">
+                  <div className="min-w-0 space-y-2">
                     {/* Header */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 bg-muted rounded-md"></div>
-                        <div className="flex-1">
-                          <div className="h-3 bg-muted rounded w-20"></div>
-                        </div>
-                      </div>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-6 h-6 bg-muted rounded-md"></div>
                     </div>
+
+                    <div className="h-3 bg-muted rounded w-20"></div>
 
                     {/* Metadata */}
                     <div className="space-y-1">
-                      <div className="h-2.5 bg-muted rounded w-28"></div>
-                      <div className="h-2.5 bg-muted rounded w-16"></div>
+                      <div className="h-2 bg-muted rounded w-24"></div>
+                      <div className="h-2 bg-muted rounded w-16"></div>
                     </div>
 
                     {/* Action Buttons */}
@@ -336,8 +256,8 @@ export function ServerList({
                   </div>
 
                   {/* Right Side Skeleton - Description */}
-                  <div className="flex items-start py-1 space-y-1">
-                    <div className="flex-1 space-y-2">
+                  <div className="flex items-start py-1 min-w-0">
+                    <div className="flex-1 space-y-2 min-w-0">
                       <div className="h-2.5 bg-muted rounded w-full"></div>
                       <div className="h-2.5 bg-muted rounded w-5/6"></div>
                       <div className="h-2.5 bg-muted rounded w-4/6"></div>
@@ -413,7 +333,7 @@ export function ServerList({
               Privacy
             </button>
             {/* <button
-              onClick={() => chrome.tabs.create({ url: 'https://mcpassistant.vercel.app/docs' })}
+              onClick={() => chrome.tabs.create({ url: 'https://www.mcp-assistant.in/docs' })}
               className="hover:text-foreground transition-colors"
             >
               Docs

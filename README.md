@@ -138,7 +138,7 @@ The extension requires the following permissions:
 - `storage` - Store authentication tokens and user data
 - `identity` - Google OAuth authentication
 - Host permissions for:
-  - `https://mcpassistant.vercel.app/*` - MCP Assistant backend
+  - `https://www.mcp-assistant.in/*` - MCP Assistant backend
   - `https://*.googleapis.com/*` - Google OAuth
 
 ## Building for Production

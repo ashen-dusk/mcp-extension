@@ -66,7 +66,7 @@ When you connect to MCP servers:
 
 ### Backend API
 Our extension communicates with:
-- `https://mcpassistant.vercel.app/*` - Main application backend
+- `https://www.mcp-assistant.in/*` - Main application backend
 - `https://api.quicklit.in/*` - API services
 - `https://express-copilotkit-runtime.vercel.app/*` - AI assistant runtime
 

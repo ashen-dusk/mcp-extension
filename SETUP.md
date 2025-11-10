@@ -155,7 +155,7 @@ Edit `manifest.json` to add/remove permissions:
 {
   "permissions": ["storage", "identity"],
   "host_permissions": [
-    "https://mcpassistant.vercel.app/*"
+    "https://www.mcp-assistant.in/*"
   ]
 }
 ```
