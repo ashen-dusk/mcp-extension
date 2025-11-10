@@ -3,7 +3,6 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { McpServer } from '@/types';
 import { Button } from './ui/button';
-import { Switch } from './ui/switch';
 import { Server, Square, Brain, Loader2, Play, RotateCcw, ChevronDown, ChevronUp, Check } from 'lucide-react';
 
 interface ServerCardProps {
@@ -103,7 +102,11 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
                   <Server className="w-3.5 h-3.5 text-primary" />
                 </div>
               </div>
-              {!server.requiresOauth2 && (
+              {server.requiresOauth2 ? (
+                <span className="text-[8px] font-medium text-orange-400 flex-shrink-0">
+                  OAuth
+                </span>
+              ) : (
                 <span className="text-[8px] font-medium text-blue-400 flex-shrink-0">
                   Open
                 </span>
@@ -223,16 +226,17 @@ export function ServerCard({ server, onRestart, onConnect, onDisconnect, onToggl
                 </Button>
               </div>
               <div className="flex items-center justify-between gap-1 pt-0.5">
-                <div className="flex items-center gap-1.5">
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={server.enabled}
+                    onChange={(e) => handleContextToggle(e.target.checked)}
+                    disabled={!isConnected || isTogglingContext}
+                    className="w-3 h-3 rounded border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
                   <Brain className="h-3 w-3 text-blue-400 flex-shrink-0" />
                   <span className="text-[9px] text-muted-foreground">Context</span>
-                  <Switch
-                    checked={server.enabled}
-                    onCheckedChange={handleContextToggle}
-                    disabled={!isConnected || isTogglingContext}
-                    className="scale-75"
-                  />
-                </div>
+                </label>
                 {getStatusBadge()}
               </div>
             </div>
