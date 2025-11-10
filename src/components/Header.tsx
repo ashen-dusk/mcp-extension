@@ -92,7 +92,7 @@ export function Header({
 
       {/* Navigation Row */}
       <div className="px-2 pb-2 flex justify-center">
-        <div className="flex gap-0.5 bg-muted/50 rounded-lg p-0.5 overflow-x-auto max-w-full">
+        <div className="flex gap-0.5 rounded-lg p-0.5 overflow-x-auto max-w-full">
           {currentView === 'servers' ? (
             <>
               <Button

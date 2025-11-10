@@ -129,7 +129,7 @@ export default function ChatInput({ onSendMessage, user }: CustomChatInputProps)
 
   return (
     <div className="w-full px-4 py-3 bg-background">
-      <div className="relative bg-muted rounded-2xl border border-border shadow-xl">
+      <div className="relative bg-muted rounded-lg border border-border shadow-xl">
         <div className="flex items-end p-4">
           {/* Message Input Area */}
           <div className="flex-1 mr-3">
@@ -167,27 +167,27 @@ export default function ChatInput({ onSendMessage, user }: CustomChatInputProps)
 
             {showModelDropdown && (
               <>
-                <div className="absolute bottom-full mb-2 right-0 bg-popover border border-border rounded-xl shadow-2xl z-50 min-w-[280px] max-w-[320px] overflow-hidden">
+                <div className="absolute bottom-full mb-2 right-0 bg-popover border border-border rounded-lg shadow-2xl z-50 min-w-[220px] max-w-[280px] overflow-hidden">
                   <div className="py-1">
                     {AVAILABLE_MODELS.map((model) => (
                       <button
                         key={model.id}
                         onClick={() => handleModelChange(model.id)}
-                        className={`w-full flex flex-col px-4 py-3 text-left transition-all duration-150
+                        className={`w-full flex flex-col px-3 py-2 text-left transition-all duration-150
                           ${selectedModel === model.id
-                            ? 'bg-blue-600/20 border-l-2 border-blue-400'
+                            ? 'bg-muted border-l-2 border-foreground'
                             : 'text-muted-foreground hover:bg-accent hover:text-foreground border-l-2 border-transparent'
                           }`}
                       >
-                        <div className="flex items-center justify-between w-full mb-1">
-                          <span className={`text-sm font-semibold ${selectedModel === model.id ? 'text-blue-400' : 'text-foreground'}`}>
+                        <div className="flex items-center justify-between w-full mb-0.5">
+                          <span className={`text-xs font-semibold ${selectedModel === model.id ? 'text-foreground' : 'text-foreground'}`}>
                             {model.name}
                           </span>
                           {selectedModel === model.id && (
-                            <CheckCircle className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <CheckCircle className="w-3.5 h-3.5 text-foreground flex-shrink-0" />
                           )}
                         </div>
-                        <span className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="text-[10px] text-muted-foreground leading-tight">
                           {model.description}
                         </span>
                       </button>

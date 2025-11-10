@@ -9,6 +9,7 @@
     "sidePanel"
   ],
   "host_permissions": [
+    "https://www.mcp-assistant.in/*",
     "https://mcpassistant.vercel.app/*",
     "https://mcp-assistant.in/*",
     "https://mcpassistant.in/*",

@@ -71,13 +71,13 @@ export function AssistantMessage({ message, isLoading }: AssistantMessageProps) 
   const showAvatar = messageContent || (isLoading && !subComponent);
 
   return (
-    <div className="flex items-start gap-3 px-4 py-3">
+    <div className="flex items-start gap-1 p-1">
       {/* Avatar - only shown when there's actual message content */}
       {showAvatar && (
         <div className="shrink-0 w-8 h-8">
-          <div className="w-full h-full flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
-            <Bot className="w-4 h-4 text-white" />
-          </div>
+          {/* <div className="w-full h-full flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500"> */}
+            <Bot className="w-5 h-5 text-white" />
+          {/* </div> */}
         </div>
       )}
 
