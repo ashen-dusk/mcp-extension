@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MCP Assistant",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Manage your MCP servers and interact with your AI assistant from anywhere",
   "permissions": [
     "storage",
