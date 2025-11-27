@@ -313,7 +313,7 @@ export function ServerList({
       <div className="border-t px-4 py-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="font-medium">v0.1.2</span>
+            <span className="font-medium">v1.1.2</span>
             <span className="text-muted-foreground/60">•</span>
             <span>{totalServers} {totalServers === 1 ? 'server' : 'servers'}</span>
             <span className="text-muted-foreground/60">•</span>

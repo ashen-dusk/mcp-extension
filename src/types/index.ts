@@ -32,7 +32,7 @@ export type McpServer = {
   tools: ToolInfo[];
   updatedAt: string;
   createdAt?: string;
-  category?: Category | null;
+  categories?: Array<{ id: string; name: string; slug: string }>;
 };
 
 export type AuthState = {

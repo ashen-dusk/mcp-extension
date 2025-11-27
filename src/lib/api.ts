@@ -63,7 +63,7 @@ export const MCP_SERVER_FRAGMENT = `
     transport
     url
     command
-    category {
+    categories {
       id
       name
       slug
@@ -241,7 +241,7 @@ export const api = {
 
     // Add category filter if provided
     if (categoryId) {
-      filters.category = {
+      filters.categories = {
         id: { exact: categoryId }
       };
     }
@@ -273,7 +273,7 @@ export const api = {
       .map(edge => {
         const category = edge.node;
         const categoryServers = servers.filter(
-          server => server.category?.id === category.id
+          server => server.categories?.some(cat => cat.id === category.id)
         );
         return {
           ...category,
